@@ -1,0 +1,6 @@
+_output/
+.up/
+.venv/
+.tmp/
+**/aws-creds
+tests/**/secrets/

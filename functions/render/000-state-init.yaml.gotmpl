@@ -1,0 +1,43 @@
+# code: language=yaml
+{{- $xr := getCompositeResource . }}
+{{- $metadata := $xr.metadata | default dict }}
+{{- $spec := $xr.spec | default dict }}
+
+{{- $name := $metadata.name | default "flux" }}
+{{- $clusterName := $spec.clusterName | default $name }}
+{{- $managementPolicies := $spec.managementPolicies | default (list "*") }}
+
+{{- $defaultLabels := dict
+  "hops.ops.com.ai/managed" "true"
+  (printf "hops.ops.com.ai/%s" (lower $xr.kind)) $name
+}}
+{{- $labels := merge $defaultLabels ($spec.labels | default dict) }}
+
+{{- $providerConfigRef := dict
+  "name" (($spec.providerConfigRef | default dict).name | default $clusterName | default "default")
+  "kind" (($spec.providerConfigRef | default dict).kind | default "ProviderConfig")
+}}
+
+{{- $namespace := $spec.namespace | default "flux-system" }}
+{{- $releaseName := $spec.name | default $name }}
+{{- $values := $spec.values | default dict }}
+{{- $overrideAllValues := $spec.overrideAllValues | default dict }}
+
+{{- $state := dict
+  "spec" (dict
+    "raw" $spec
+    "effective" (dict
+      "name" $name
+      "clusterName" $clusterName
+      "managementPolicies" $managementPolicies
+      "labels" $labels
+      "providerConfigRef" $providerConfigRef
+      "namespace" $namespace
+      "releaseName" $releaseName
+      "values" $values
+      "overrideAllValues" $overrideAllValues
+    )
+  )
+  "observed" (dict)
+  "flux" (dict)
+}}

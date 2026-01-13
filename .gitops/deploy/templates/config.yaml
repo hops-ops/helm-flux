@@ -1,0 +1,21 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: helm-flux
+spec:
+  package: ghcr.io/hops-ops/helm-flux:{{ .Values.version }}
+  packagePullSecrets:
+    - name: ghcr
+  skipDependencyResolution: {{ .Values.skipDependencyResolution }}
+{{- if .Values.skipDependencyResolution }}
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: hops-ops-helm-fluxrender
+spec:
+  package: ghcr.io/hops-ops/helm-flux_render:{{ .Values.version }}
+  packagePullSecrets:
+    - name: ghcr
+  skipDependencyResolution: {{ .Values.skipDependencyResolution }}
+{{- end }}

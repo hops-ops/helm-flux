@@ -1,0 +1,19 @@
+# code: language=yaml
+{{- $raw := $.observed.resources | default dict }}
+{{- $entry := get $raw "helm-release-flux" | default dict }}
+{{- $resource := $entry.resource | default dict }}
+{{- $status := $resource.status | default dict }}
+{{- $atProvider := $status.atProvider | default dict }}
+
+{{- $ready := false }}
+{{- range ($status.conditions | default list) }}
+  {{- if and (eq .type "Ready") (eq .status "True") }}
+    {{- $ready = true }}
+  {{- end }}
+{{- end }}
+
+{{- $state = set $state "observed" (merge $state.observed (dict "helmRelease" (dict
+  "ready" $ready
+  "state" ($atProvider.state | default "")
+  "revision" ($atProvider.revision | default "")
+))) }}

@@ -1,0 +1,15 @@
+# code: language=yaml
+{{- $fl := $state.flux }}
+{{- $obs := $state.observed }}
+
+{{- $helmReady := $obs.helmRelease.ready | default false }}
+{{- $ready := $helmReady }}
+
+{{- $state = set $state "status" (dict
+  "ready" $ready
+  "release" (dict
+    "name" $fl.releaseName
+    "namespace" $fl.namespace
+    "ready" $helmReady
+  )
+) }}

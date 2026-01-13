@@ -1,0 +1,34 @@
+# code: language=yaml
+{{- $fl := $state.flux }}
+
+---
+apiVersion: helm.m.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: {{ $fl.releaseName }}
+  annotations:
+    {{ setResourceNameAnnotation "helm-release-flux" }}
+  labels: {{ $fl.labels | toJson }}
+spec:
+  managementPolicies: {{ $fl.managementPolicies | toJson }}
+  forProvider:
+    chart:
+      name: flux2
+      repository: https://fluxcd-community.github.io/helm-charts
+      version: 2.14.1
+    namespace: {{ $fl.namespace }}
+    {{- if $fl.overrideAllValues }}
+    values:
+      {{- toYaml $fl.overrideAllValues | nindent 6 }}
+    {{- else }}
+    values:
+      fullnameOverride: flux
+      nameOverride: flux
+      {{- if $fl.values }}
+      {{- toYaml $fl.values | nindent 6 }}
+      {{- end }}
+    {{- end }}
+  rollbackLimit: 3
+  providerConfigRef:
+    name: {{ $fl.providerConfigRef.name }}
+    kind: {{ $fl.providerConfigRef.kind }}

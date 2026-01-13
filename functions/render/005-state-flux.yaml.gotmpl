@@ -1,0 +1,16 @@
+# code: language=yaml
+{{- $eff := $state.spec.effective }}
+
+{{- $flux := dict
+  "name" $eff.name
+  "clusterName" $eff.clusterName
+  "managementPolicies" $eff.managementPolicies
+  "labels" $eff.labels
+  "providerConfigRef" $eff.providerConfigRef
+  "namespace" $eff.namespace
+  "releaseName" $eff.releaseName
+  "values" $eff.values
+  "overrideAllValues" $eff.overrideAllValues
+}}
+
+{{- $state = set $state "flux" $flux }}
