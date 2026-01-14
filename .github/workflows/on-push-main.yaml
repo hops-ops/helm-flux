@@ -2,7 +2,8 @@ name: on-push-main
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - '.github/workflows/on-push-main.yaml'
       - '.github/workflows/on-version-tagged.yaml'
@@ -40,7 +41,10 @@ jobs:
 
   version-and-tag:
     name: Version and Tag
-    needs: [validate, test, e2e]
+    needs:
+      - validate
+      - test
+      - e2e
     uses: unbounded-tech/workflow-vnext-tag/.github/workflows/workflow.yaml@v1.20.2
     secrets:
       DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
