@@ -8,14 +8,9 @@ spec:
     kind: Flux
   mode: Pipeline
   pipeline:
-  - step: render
-    functionRef:
-      name: function-go-templating
-    input:
-      apiVersion: gotemplating.fn.crossplane.io/v1beta1
-      kind: GoTemplate
-      source: Filesystem
-      path: functions/render
-  - step: auto-ready
-    functionRef:
-      name: function-auto-ready
+  - functionRef:
+      name: hops-ops-helm-fluxrender
+    step: render
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

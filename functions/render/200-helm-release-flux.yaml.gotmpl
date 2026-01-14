@@ -1,4 +1,12 @@
 # code: language=yaml
+#
+# Helm release for Flux CD
+#
+# Integration defaults:
+# - Prometheus metrics enabled for reconciliation monitoring
+# - ServiceMonitors created for all Flux controllers
+#
+
 {{- $fl := $state.flux }}
 
 ---
@@ -24,6 +32,25 @@ spec:
     values:
       fullnameOverride: flux
       nameOverride: flux
+      # Prometheus metrics for GitOps reconciliation monitoring
+      helmController:
+        serviceMonitor:
+          enabled: true
+      sourceController:
+        serviceMonitor:
+          enabled: true
+      kustomizeController:
+        serviceMonitor:
+          enabled: true
+      notificationController:
+        serviceMonitor:
+          enabled: true
+      imageReflectorController:
+        serviceMonitor:
+          enabled: true
+      imageAutomationController:
+        serviceMonitor:
+          enabled: true
       {{- if $fl.values }}
       {{- toYaml $fl.values | nindent 6 }}
       {{- end }}
