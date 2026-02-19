@@ -1,5 +1,0 @@
-apiVersion: v2
-name: helm-flux
-version: 0.0.0
-description: GitOps packaging for the Flux2 Crossplane configuration
-appVersion: 2.17.2

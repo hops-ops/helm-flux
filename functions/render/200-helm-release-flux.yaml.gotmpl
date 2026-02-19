@@ -30,8 +30,6 @@ spec:
       {{- toYaml $fl.overrideAllValues | nindent 6 }}
     {{- else }}
     values:
-      fullnameOverride: flux
-      nameOverride: flux
       # Prometheus metrics for GitOps reconciliation monitoring
       helmController:
         serviceMonitor:
